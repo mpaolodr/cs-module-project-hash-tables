@@ -34,7 +34,6 @@ class SLL:
             self.tail = new_node
 
 
-
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -61,6 +60,8 @@ class HashTable:
         """
         # Your code here
 
+        return len(self.storage)
+
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
@@ -85,6 +86,18 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+
+        # byte object is returned after converting key into bytes
+        # specify encoding because other machines might have different default encoding
+        bytes_obj = str(key).encode("utf-8")
+        djb2_val = 5381
+        total_val = 0
+
+        for char in bytes_obj:
+            total_val += ((djb2_val << 5) + djb2) + char
+            total_val &= 0xffffffff
+
+        return total_val
 
     def hash_index(self, key):
         """
