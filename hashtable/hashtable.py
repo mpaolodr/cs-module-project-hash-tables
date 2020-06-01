@@ -21,8 +21,8 @@ class SLL:
         self.head = None
         self.tail = None
 
-    def add_to_tail(self, value):
-        new_node = HashTableEntry((key, value))
+    def add_to_tail(self, key, value):
+        new_node = HashTableEntry(key, value)
 
         # there's nothing in linked list
         if not self.head:
@@ -121,14 +121,27 @@ class HashTable:
         # check if key is already in storage
         if self.storage[index] != None:
 
-            # if key is already in storage, add item as new next value for the last node
-            self.storage[index].add_to_tail((key, value))
+            # if key is already in storage, overwrite current value
+
+            current = self.storage[index].head
+
+            while current.next is not None:
+                if current.key == key:
+                    # overwrite the value
+                    current.value = value
+
+                current = current.next
+
+            if current.key == key:
+                current.value = value
+            else:
+                self.storage[index].add_to_tail(key, value)
 
         else:
             # if key is not in storage, create a new linked list passing in the key and value as the value
 
             self.storage[index] = SLL()
-            self.storage[index].add_to_tail((key, value))
+            self.storage[index].add_to_tail(key, value)
 
     def delete(self, key):
         """
@@ -142,23 +155,22 @@ class HashTable:
         index = self.hash_index(key)
 
         # self.storage[index] is a node with tuple as a value
-        # self.storage[index].value[0] will be the key
-        # if self.storage[index].value[0] is not equal to the key, traverse the linked list
+        # if self.storage[index].key is not equal to the key, traverse the linked list
 
-        if self.storage[index].value[0] == key:
-            self.storage[index].value = None
+        if self.storage[index].head.key == key:
+            self.storage[index].head.value = None
 
         else:
-            current = self.storage[index]
+            current = self.storage[index].head
 
             while current.next is not None:
-                if current.value[0] == key:
+                if current.key == key:
                     current.value = None
 
                 current = current.next
 
             # current.next is now None, the last current will be the tail
-            if current.value[0] == key:
+            if current.key == key:
                 current.value = None
 
             else:
@@ -173,6 +185,31 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
+        # if self.storage[index].key == key, return the value
+        # if self.storage[index].key is not the key, traverse the linked list
+        # if not found return None
+
+        index = self.hash_index(key)
+
+        if self.storage[index].head.key == key:
+            return self.storage[index].head.value
+
+        else:
+
+            current = self.storage[index].head
+
+            while current.next is not None:
+                if current.key == key:
+                    return current.value
+
+                current = current.next
+
+            if current.key == key:
+                return current.value
+
+            else:
+                return None
 
     def resize(self, new_capacity):
         """
