@@ -42,7 +42,7 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
+    def __init__(self, capacity=MIN_CAPACITY):
         # Your code here
 
         self.capacity = capacity
@@ -69,6 +69,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
+        # load factor is the number of slots filled divided by capacity?
+
+        total = 0
+
+        for item in self.storage:
+            print(item)
+            if item != None:
+                total += 1
+
+        return total / self.get_num_slots()
 
     def fnv1(self, key):
         """
@@ -219,6 +230,32 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # create a copy of the old storage
+        storage_copy = self.storage
+        # change value of capacity
+        self.capacity = new_capacity
+        # change value of storage
+        self.storage = [None] * self.capacity
+
+        # loop through items of the array
+        # if item.next is None, move to next index
+        for i in range(len(storage_copy)):
+            # each item is a linked list
+            if storage_copy[i] != None:
+
+                # traverse the linked list and rehash each item
+                current = storage_copy[i].head
+
+                while current.next is not None:
+                    index = self.hash_index(current.key)
+                    self.put(current.key, current.value)
+                    current = current.next
+
+                # current value will now be the tail
+                index = self.hash_index(current.key)
+
+                self.put(current.key, current.value)
+
 
 
 if __name__ == "__main__":
