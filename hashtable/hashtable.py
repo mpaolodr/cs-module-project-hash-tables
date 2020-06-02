@@ -9,7 +9,7 @@ class HashTableEntry:
         self.next = None
 
     def __repr__(self):
-        return f"HashTableEntry({repr(self.key)}, {rept(self.value)})"
+        return f"HashTableEntry({repr(self.key)}, {repr(self.value)})"
 
 
 # Hash table can't have fewer than this many slots
@@ -74,9 +74,16 @@ class HashTable:
 
         total = 0
 
-        for item in self.storage:
-            print(item)
-            if item != None:
+        for i in range(len(self.storage)):
+            if self.storage[i] != None:
+
+                current = self.storage[i].head
+
+                while current.next is not None:
+                    total += 1
+
+                    current = current.next
+
                 total += 1
 
         return total / self.get_num_slots()
@@ -247,7 +254,6 @@ class HashTable:
                 current = storage_copy[i].head
 
                 while current.next is not None:
-                    index = self.hash_index(current.key)
                     self.put(current.key, current.value)
                     current = current.next
 
@@ -255,7 +261,6 @@ class HashTable:
                 index = self.hash_index(current.key)
 
                 self.put(current.key, current.value)
-
 
 
 if __name__ == "__main__":
@@ -284,6 +289,8 @@ if __name__ == "__main__":
     old_capacity = ht.get_num_slots()
     ht.resize(ht.capacity * 2)
     new_capacity = ht.get_num_slots()
+
+    print(ht.get_load_factor())
 
     print(f"\nResized from {old_capacity} to {new_capacity}.\n")
 
