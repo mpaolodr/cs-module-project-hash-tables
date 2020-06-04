@@ -33,6 +33,27 @@ class SLL:
             self.tail.next = new_node
             self.tail = new_node
 
+    def delete(self, key):
+        current = self.head
+
+        if current.key == key:
+            self.head = self.head.next
+            return current.value
+
+        previous = current
+        current = current.next
+
+        while current is not None:
+            if current.key == key:
+                previous.next = current.next
+                return current.value
+
+            else:
+                previous = previous.next
+                current = current.next
+
+        return None
+
 
 class HashTable:
     """
@@ -174,7 +195,6 @@ class HashTable:
 
         # self.storage[index] is a node with tuple as a value
         # if self.storage[index].key is not equal to the key, traverse the linked list
-
         if self.storage[index].head.key == key:
             self.storage[index].head.value = None
 
